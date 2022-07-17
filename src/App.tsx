@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
+import AddHabit from './components/AddHabit';
+import Habits from './components/Habits';
 
 function App() {
+  const [isAddingHabit, setIsAddingHabit] = useState(false);
+
+  const handleKeyPress = useCallback((e: KeyboardEvent) => {
+    console.log('listening to App');
+    if (e.key === 'h' && e.ctrlKey === true) {
+      e.preventDefault();
+      setIsAddingHabit(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      {isAddingHabit ? <AddHabit setIsAddingHabit={setIsAddingHabit} /> : null}
+      <h1>Habit Tracker</h1>
+      <button onClick={() => setIsAddingHabit(true)}>New Habit</button>
+      <Habits />
     </div>
   );
 }
