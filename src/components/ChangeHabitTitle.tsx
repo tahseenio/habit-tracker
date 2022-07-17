@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useHabitContext } from '../context/HabitContextProvider';
 
 interface Props {
@@ -26,6 +26,30 @@ const ChangeHabitTitle = ({ id, setIsUpdating }: Props) => {
     setIsUpdating(false);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('handing at addhabit');
+    if (e.key === 'Enter') {
+      handleUpdateHabit();
+    }
+  };
+
+  const handleGlobalKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsUpdating(false);
+      }
+    },
+    [setIsUpdating]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleGlobalKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyPress);
+    };
+  }, [handleGlobalKeyPress]);
+
   return (
     <div className='add-habit__wrapper'>
       <button onClick={() => setIsUpdating(false)}>Close</button>
@@ -36,6 +60,7 @@ const ChangeHabitTitle = ({ id, setIsUpdating }: Props) => {
         onChange={(e) => {
           setNewTitle(e.target.value);
         }}
+        onKeyUp={handleKeyPress}
       />
       <button onClick={handleUpdateHabit}>Change Title</button>
     </div>

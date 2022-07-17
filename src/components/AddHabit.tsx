@@ -50,7 +50,6 @@ const AddHabit = ({ setIsAddingHabit }: Props) => {
         autoFocus
         type='text'
         onChange={(e) => {
-          console.log(e.target.value);
           setNewHabit(e.target.value);
         }}
         onKeyUp={handleKeyPress}
